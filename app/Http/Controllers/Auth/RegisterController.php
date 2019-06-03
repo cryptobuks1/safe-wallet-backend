@@ -26,6 +26,7 @@ class RegisterController extends Controller
             'email' => $value['email'],
             'password' => Hash::make($value['password'])
         ]);
+        $user->balance()->create([ 'balance' => 100.0  ]);
         $user->token = $user->createToken('safe-wallet');
         return new LoginResource($user);
     }
