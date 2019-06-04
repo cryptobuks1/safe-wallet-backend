@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\API\Mobil;
 
 use App\Balance;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BalanceResource;
 
@@ -16,7 +19,7 @@ class BalanceController extends Controller
      */
     public function index()
     {
-        $balance = Auth::user()->balance();
+        $balance = Balance::where('user_id', Auth::id())->firstOrFail();
         return new BalanceResource( $balance);
     }
 

@@ -16,7 +16,7 @@ class BalanceResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'balance' => $this->id
+            'balance' => $this->balance
         ];
     }
 }

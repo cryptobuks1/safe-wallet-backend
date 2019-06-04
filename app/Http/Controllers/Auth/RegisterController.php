@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Resources\LoginResource;
-use App\User;
+use App\Http\Services\UserService;
 
 class RegisterController extends Controller
 {
@@ -20,13 +19,7 @@ class RegisterController extends Controller
      */
     public function register(RegisterRequest $request)
     {   
-        $value = $request->validated();
-        $user = User::create( [
-            'name' => $value['name'],
-            'email' => $value['email'],
-            'password' => Hash::make($value['password'])
-        ]);
-        $user->balance()->create([ 'balance' => 100.0  ]);
+        $user = UserService::register( $request->validated());
         $user->token = $user->createToken('safe-wallet');
         return new LoginResource($user);
     }
