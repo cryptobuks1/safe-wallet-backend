@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\API\Mobil;
 
 use App\Transaction;
+use App\Transfer;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\TransactionResource;
 
 class TransferController extends Controller
 {
@@ -14,8 +17,9 @@ class TransferController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        //
+    {   
+        $transactions = Transfer::with('transaction')->where('user_id', Auth::id())->paginate();
+        return TransactionResource::collection( $transactions);
     }
 
     /**
@@ -40,26 +44,4 @@ class TransferController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Transaction  $transaction
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Transaction $transaction)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Transaction  $transaction
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Transaction $transaction)
-    {
-        //
-    }
 }

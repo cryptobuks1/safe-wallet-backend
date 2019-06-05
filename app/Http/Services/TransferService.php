@@ -5,22 +5,20 @@ namespace App\Http\Services;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 use App\User;
 USE App\Balance;
 
-class UserService 
+class TranferService 
 {
     /**
-     * get all users 
+     * get all transactions
      */
-    public static function all( &$search)
+    public static function all( &$user_id)
     {
-        return User::where('name', 'like', $search . '%')->
-        select('name', 'code')->
-        orderBy('name')->
-        paginate();
+        return Transfer::with('transaction')
+        ->where('user_id', $user_id)
+        ->paginate();
     }
 
     /**
@@ -32,10 +30,9 @@ class UserService
         try
         {
             DB::beginTransaction();
-            $value[ 'password'] = Hash::make( $value[ 'password']);
-            $value[ 'code'] = (string) Str::uuid();
-            $user = User::create( Arr::only( $value, [ 'name', 'email', 'password', 'code']));
-            Balance::create([
+            $value['password'] = Hash::make($value['password']);
+            $user = User::create( Arr::only( $value, [ 'name', 'email', 'password']));
+            Balance::create([ 
                 'user_id' => $user->id,
                 'balance' => 100.0  
             ]);
@@ -49,4 +46,6 @@ class UserService
         }
     }
 
+
+    
 }

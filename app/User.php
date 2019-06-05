@@ -19,7 +19,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'code'
     ];
 
     /**
@@ -43,7 +43,7 @@ class User extends Authenticatable
 
     public function balance()
     {
-        return $this->belongsTo(Balance::class);
+        return $this->hasOne(Balance::class);
     }
  
 }

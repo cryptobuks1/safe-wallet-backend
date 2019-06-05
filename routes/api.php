@@ -23,7 +23,9 @@ Route::middleware('auth:api')->group(function () {
     Route::delete('logout', 'Auth\LoginController@logout')->name('logout');
     Route::apiResource('balance','API\Mobil\BalanceController')->only([ 'index', 'store']);
     Route::apiResource('transfer', 'API\Mobil\TransferController')->only(['index','store', 'show']);
+    
     Route::apiResource('transactions', 'API\Mobil\TransferController')->only([ 'index', 'show']);
+    
     Route::apiResource('payments', 'API\Mobil\PaymentController')->only([ 'index', 'show', 'delete', 'update']);
     Route::get('people', 'API\Mobil\PeopleController@index');
 });
