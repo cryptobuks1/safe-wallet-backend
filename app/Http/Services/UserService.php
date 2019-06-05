@@ -12,6 +12,17 @@ USE App\Balance;
 class UserService 
 {
     /**
+     * get all users 
+     */
+    public static function all( &$search)
+    {
+        return User::where('name', 'like', $search . '%')->
+        select('name', 'code')->
+        orderBy('name')->
+        paginate();
+    }
+
+    /**
      * register a user 
      * @param $valuews { }
      */
