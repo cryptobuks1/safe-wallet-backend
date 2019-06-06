@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\User;
 
 class Balance extends Model
 {    
@@ -14,5 +15,10 @@ class Balance extends Model
     protected $fillable = [
        'balance', 'user_id'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
     
 }

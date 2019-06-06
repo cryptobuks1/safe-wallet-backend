@@ -21,8 +21,7 @@ class UserTest extends TestCase
         $this->assertNotNull( $all);
     }
 
-
-        /**
+    /**
      * @return void
      */
     public function testRegister()

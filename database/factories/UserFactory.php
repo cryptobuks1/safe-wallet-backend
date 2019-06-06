@@ -2,6 +2,8 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 use App\User;
+use App\Balance;
+
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 
@@ -23,7 +25,16 @@ $factory->define(User::class, function (Faker $faker) {
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
         'email_verified_at' => now(),
+        'code' => (string) Str::uuid(),
         'password' => Hash::make('123456'),
         'remember_token' => Str::random(10),
     ];
+});
+
+
+$factory->afterCreating(User::class, function ($user, $faker) {
+    Balance::create([
+        'user_id' => $user->id,
+        'balance' => 100.0  
+    ]);
 });

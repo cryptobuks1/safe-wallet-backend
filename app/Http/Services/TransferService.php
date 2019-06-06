@@ -3,11 +3,12 @@
 namespace App\Http\Services;
 
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Hash;
 
 use App\User;
 USE App\Balance;
+use App\Transfer;
+
+use PHPUnit\Framework\Exception;
 
 class TranferService 
 {
@@ -22,30 +23,38 @@ class TranferService
     }
 
     /**
-     * register a user 
-     * @param $valuews { }
+     * register a transference 
+     * @param $value [ code, amount]
+     * @param $user_id
+     * @return transaction 
      */
-    public static function register( $value)
+    public static function register( $value, $user_id)
     {
         try
         {
+            $code = $value['code'];
+            $amount = $value['amount'];
+
+            $user = User::find( $user_id);
+            $userDes = User::where('code', $value['code'])->findOrFail();
+
             DB::beginTransaction();
-            $value['password'] = Hash::make($value['password']);
-            $user = User::create( Arr::only( $value, [ 'name', 'email', 'password']));
-            Balance::create([ 
-                'user_id' => $user->id,
-                'balance' => 100.0  
+
+            $balance = $user->balance()->whereRaw("balance - ? >= 0 ", [ $amount])->sharedLock()->first();
+
+            Transfer::create([
+
             ]);
+
             DB::commit();
-            return $user;
+            return $user_id;
         }
         catch( Exception $e)
         {
             DB::rollBack();
             throw $e;
         }
+
     }
 
-
-    
 }
