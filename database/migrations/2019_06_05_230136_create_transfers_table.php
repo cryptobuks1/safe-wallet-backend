@@ -24,8 +24,12 @@ class CreateTransfersTable extends Migration
             $table->unsignedBigInteger('beneficiary_id');
             $table->foreign('beneficiary_id')->references('id')->on('users')->onDelete('cascade');
 
-            $table->unsignedBigInteger('transaction_id');
-            $table->foreign('transaction_id')->references('id')->on('transactions')->onDelete('cascade');
+            $table->unsignedBigInteger('source_id');
+            $table->foreign('source_id')->references('id')->on('transactions')->onDelete('cascade');
+
+            $table->unsignedBigInteger('destination_id');
+            $table->foreign('destination_id')->references('id')->on('transactions')->onDelete('cascade');
+
 
             $table->timestamps();
         });

@@ -29,6 +29,7 @@ class TransferTest extends TestCase
         $tranfer = TranferService::register([
             'code' => $user2->code,
             'amount' => 10,
+            'commentary' => 'Soy un comentario'
         ], $user->id);
 
         $this->assertEquals( $balance - 10, $user->balance()->first()->balance);
