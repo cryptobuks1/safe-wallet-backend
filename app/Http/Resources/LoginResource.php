@@ -18,6 +18,7 @@ class LoginResource extends JsonResource
             "id" => $this->id,
             "name"=> $this->name,
             "email" => $this->email,
+            "code" => $this->code,
             "email_verified_at"  => $this->email_verified_at,
             "token" => [
                 "accessToken" => $this->token->accessToken,

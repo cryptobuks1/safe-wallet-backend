@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\TransactionResource;
+use App\Http\Requests\TransferRequest;
+
+use App\Jobs\TransferJob;
+use App\Http\Services\TranferService;
 
 class TransferController extends Controller
 {
@@ -17,9 +21,9 @@ class TransferController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {   
-        $transactions = Transfer::with('transaction')->where('user_id', Auth::id())->paginate();
-        return TransactionResource::collection( $transactions);
+    {
+        $transfers = TranferService::all(Auth::id());
+        return TransactionResource::collection($transfers);
     }
 
     /**
@@ -28,9 +32,12 @@ class TransferController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TransferRequest $request)
     {
-        //
+        $value = $request->validated();
+        $tranfer = TranferService::register($value);
+        TransferJob::dispatch($tranfer->id);
+        return new TransactionResource($tranfer);
     }
 
     /**
@@ -39,9 +46,8 @@ class TransferController extends Controller
      * @param  \App\Transaction  $transaction
      * @return \Illuminate\Http\Response
      */
-    public function show(Transaction $transaction)
+    public function show(Transfer $tranfer)
     {
-        //
+        return new TransactionResource($tranfer);
     }
-
 }
