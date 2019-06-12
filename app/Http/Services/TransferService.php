@@ -78,4 +78,55 @@ class TranferService
 
     }
 
+    /**
+     * process a transference 
+     * @param $value [ code, amount]
+     * @param $user_id
+     * @return transaction 
+     */
+    public static function process( $transfer_id)
+    {
+        try
+        {
+            $transfer = Transfer::with([ 'user', 'beneficiary', 'source', 'destination'])->findOrFail( $transfer_id);
+            
+            if( $transfer->source->status != 'pending')
+            {
+                return $transfer;
+            }
+
+            DB::beginTransaction();
+            $balanceDestionation = $transfer->user->balance()->sharedLock()->first();
+            $balanceSource = $transfer->beneficiary->balance()->sharedLock()->first();
+
+            if( $balanceSource->balance >= - $transfer->sorce->amount) 
+            {
+                $balanceSource->balance = $balanceSource->balance - $transfer->sorce->amount;
+                $balanceDestionation->balance = $balanceSource->balance + $transfer->destination->amount;
+                $transfer->sorce->status = 'accepted';
+                $transfer->destination->status = 'accepted';
+
+                $balanceSource->save();
+                $balanceDestionation->save();
+                $transfer->destination->save();
+                $transfer->sorce->svae();
+            }
+            else 
+            {
+                $transfer->sorce->status = 'rejected';
+                $transfer->destination->status = 'rejected';
+                $transfer->destination->save();
+                $transfer->sorce->svae();
+            }
+
+            DB::commit();
+            return $transfer;
+        }
+        catch( Exception $e)
+        {
+            DB::rollBack();
+            throw $e;
+        }
+    }
+
 }
