@@ -26,7 +26,7 @@ class TransferRequest extends FormRequest
         return [
             'code' => ['required', 'exists:users,code'],
             'amount' => ['required', 'numeric'],
-            'commentary' => ['nullable', 'max:value'],
+            'commentary' => ['nullable', 'max:200'],
         ];
     }
 }

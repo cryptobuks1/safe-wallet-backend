@@ -4,14 +4,19 @@ namespace App\Http\Controllers\API\Mobil;
 
 use App\Transaction;
 use App\Transfer;
+use App\User;
+
+
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+
+use App\Http\Controllers\Controller;
+use App\Http\Services\TranferService;
 use App\Http\Resources\TransactionResource;
 use App\Http\Requests\TransferRequest;
+use App\Http\Resources\Transfer\UserResource;
 
 use App\Jobs\TransferJob;
-use App\Http\Services\TranferService;
 
 class TransferController extends Controller
 {
@@ -26,6 +31,18 @@ class TransferController extends Controller
         return TransactionResource::collection($transfers);
     }
 
+
+    /**
+     * validate a code
+     * @return \Illuminate\Http\Response
+     */
+    public function validateCode(Request $request)
+    {
+        $code = $request->input('code');
+        $user = User::where('code', $code)->select(['id', 'name', 'code'])->firstOrFail();
+        return new UserResource($user);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -35,8 +52,8 @@ class TransferController extends Controller
     public function store(TransferRequest $request)
     {
         $value = $request->validated();
-        $tranfer = TranferService::register($value);
-        TransferJob::dispatch($tranfer->id);
+        $tranfer = TranferService::register($value, Auth::id());
+        // TransferJob::dispatch($tranfer->id);
         return new TransactionResource($tranfer);
     }
 

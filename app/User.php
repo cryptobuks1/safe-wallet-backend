@@ -45,5 +45,10 @@ class User extends Authenticatable
     {
         return $this->hasOne(Balance::class);
     }
+
+    public function directories()
+    {
+        return $this->belongsToMany(User::class, 'directories', 'user_id', 'beneficiary_id');
+    }
  
 }

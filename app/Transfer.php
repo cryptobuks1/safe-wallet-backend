@@ -14,7 +14,7 @@ class Transfer extends Model
      *
      * @var array
      */
-    protected $fillable = ['user_id', 'beneficiary_id', 'commentary_id', 'source_id', 'destination_id'];
+    protected $fillable = ['user_id', 'beneficiary_id', 'commentary', 'source_id', 'destination_id'];
 
     public function user()
     {
