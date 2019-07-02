@@ -20,7 +20,11 @@ Route::post('register', 'Auth\RegisterController@register');
 
 Route::middleware('auth:api')->group(function () {
     Route::delete('logout', 'Auth\LoginController@logout')->name('logout');
+
     Route::get('directories', 'API\Mobil\UserController@index');
+    Route::post('directories', 'API\Mobil\UserController@addDirectory');
+    Route::delete('directories', 'API\Mobil\UserController@removeDirectory');
+
     Route::apiResource('balance','API\Mobil\BalanceController')->only([ 'index', 'store']);
     Route::group(['where'  => ['transfer' => '[0-9]+']], function () {
 	    Route::apiResource('transfer', 'API\Mobil\TransferController')->only(['index','store', 'show']);
