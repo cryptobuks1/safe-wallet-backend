@@ -4,11 +4,14 @@ namespace App;
 
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 use App\Balance;
 
+/**
+ * User 
+ * 
+ */
 class User extends Authenticatable
 {
     use HasApiTokens, Notifiable;
@@ -19,7 +22,10 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'code'
+        'name',
+        'email',
+        'password',
+        'code'
     ];
 
     /**
@@ -28,7 +34,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
+        'remember_token',
     ];
 
     /**
@@ -39,16 +46,21 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-  
 
+    /**
+     * 
+     */
     public function balance()
     {
         return $this->hasOne(Balance::class);
     }
 
+    /**
+     * 
+     */
     public function directories()
     {
         return $this->belongsToMany(User::class, 'directories', 'user_id', 'beneficiary_id');
     }
- 
+
 }

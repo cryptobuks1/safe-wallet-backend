@@ -5,6 +5,9 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\User;
 
+/**
+ * Balance
+ */
 class Balance extends Model
 {    
     /**
@@ -16,6 +19,9 @@ class Balance extends Model
        'balance', 'user_id'
     ];
 
+    /**
+     * 
+     */
     public function user()
     {
         return $this->belongsTo(User::class);
